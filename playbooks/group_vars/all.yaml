@@ -28,4 +28,6 @@ wifi_password: !vault |
 
 # Wifi country
 wifi_country: PT
+
+# Enable wifi config
 wifi_enable: True
