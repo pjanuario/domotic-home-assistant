@@ -52,6 +52,6 @@ NOTE: The `.vault-domotic` is added to `.gitignore` file to prevent that it ends
 
 For each secret property that exists in `group_vars/all.yaml` you need to execute the following command:
 
-    $ ansible-vault encrypt_string --vault-id .vault-domotic 'changeme' --name 'pi_password'
+    $ ansible-vault encrypt_string 'changeme' --name 'pi_password'
 
 Pick the output and replace on the file.
