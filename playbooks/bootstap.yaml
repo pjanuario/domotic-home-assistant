@@ -1,0 +1,9 @@
+- hosts: raspberry
+  become: true
+
+  tasks:
+    - include_role:
+        name: pi-wifi
+      when:
+        - wifi_enable is defined and wifi_enable == True
+      tag: bootstrap

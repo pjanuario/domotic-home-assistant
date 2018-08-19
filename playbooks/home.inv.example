@@ -1,0 +1,5 @@
+[raspberry]
+raspberry0 ansible_host=000.000.0.00
+
+[raspberry:vars]
+ansible_python_interpreter=/usr/bin/python3

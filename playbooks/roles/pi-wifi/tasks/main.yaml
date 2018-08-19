@@ -1,0 +1,17 @@
+# Depends on:
+#   vars:
+#       wifi_ssid: mysid
+#       wifi_password: change
+#       wifi_country: PT
+#   handlers:
+#       handlers/reboot.yml
+#   templates:
+#       templates/wpa_supplicant.conf
+#
+
+# Set up WiFi from a tempate
+---
+- name: Ensure wifi configuration
+  template: src=../templates/wpa_supplicant.conf dest=/etc/wpa_supplicant/wpa_supplicant.conf
+  when: ansible_wlan0
+  notify: reboot machine
