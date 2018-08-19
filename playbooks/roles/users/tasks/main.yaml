@@ -1,0 +1,46 @@
+# Depends on:
+#   vars:
+#       admin_user: some_user
+#       admin_pub_key: something
+#
+---
+  - name: Make sure we have a 'administrators' group
+    group:
+      name: administrators
+      state: present
+    tags: [administrators]
+
+  - name: Allow 'administrators' group to have passwordless sudo
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^%administrators'
+      line: '%administrators ALL=(ALL:ALL) NOPASSWD: ALL'
+      validate: visudo -cf %s
+    tags: [administrators]
+
+  - name: Allow 'sudoers' group to have passwordless sudo
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^%sudo'
+      line: '%sudo ALL=(ALL:ALL) NOPASSWD: ALL'
+      validate: visudo -cf %s
+    tags: [administrators]
+
+  - name: Add sudo user
+    user:
+      name: "{{ admin_user }}"
+      home: "/home/{{ admin_user }}"
+      group: administrators
+      groups: "administrators,pi,sudo"
+      shell: /bin/bash
+      state: present
+    tags: [administrators]
+
+  - name: Add sudoers users authorised keys
+    authorized_key:
+      user: "{{ admin_user }}"
+      state: present
+      key: "{{ admin_pub_key }}"
+    tags: [administrators]

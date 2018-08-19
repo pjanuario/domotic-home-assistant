@@ -55,3 +55,16 @@ For each secret property that exists in `group_vars/all.yaml` you need to execut
     $ ansible-vault encrypt_string 'changeme' --name 'pi_password'
 
 Pick the output and replace on the file.
+
+# Create a admin user
+
+The bootstrap playbook is going to remove the default user, so before we run it we need to ensure that the we can connect using ssh with a new admin user.
+Please make sure you have ssh configurations and your ssh config file defines a default user that is the one present in the configuration.
+
+    $ ansible-playbook users.yaml -u pi -e 'ansible_ssh_pass=raspberry'
+
+Once the playbook run you should be able to run the following command
+
+    $ ansible -m ping all
+
+**NOTE:** If the following command isnt working please do not proceed to next steps. Most likely you are missing the user define on the ssh config or you can also pass using `-u`.
