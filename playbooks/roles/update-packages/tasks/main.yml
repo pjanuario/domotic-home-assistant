@@ -1,0 +1,27 @@
+---
+  - name: Update APT package cache
+    apt: update_cache=yes cache_valid_time=3600
+    tags: [update-packages]
+
+  # disabled due to problem https://github.com/pjanuario/domotic-home-assistant/issues/1
+  # - name: Upgrade APT to the latest packages
+  #   apt: upgrade=safe
+  #   tags: [update-packages]
+
+  - name: Remove unrequired packages
+    apt: autoremove=yes
+    tags: [update-packages]
+
+  - name: Adjust APT update intervals
+    copy: src=files/apt_periodic dest=/etc/apt/apt.conf.d/10periodic
+    tags: [update-packages]
+
+  - name: Check if reboot is required
+    stat:
+      path: /var/run/reboot-required
+    register: reboot_required_file
+
+  - name: Send the reboot command
+    shell: /bin/true
+    notify: reboot server
+    when: reboot_required_file.stat.exists
