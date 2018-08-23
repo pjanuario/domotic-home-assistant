@@ -1,0 +1,10 @@
+# This is used to manage Ansible role dependences
+# http://docs.ansible.com/galaxy.html#installing-multiple-roles-from-a-file
+# Install with: `ansible-galaxy install -r requirements.yml`
+
+- name: os-hardening
+  src: dev-sec.os-hardening
+  version: 4.3.0
+- name: ssh-hardening
+  src: dev-sec.ssh-hardening
+  version: 4.4.0
