@@ -1,0 +1,39 @@
+---
+  - name: Ensure we remove the pi user
+    user:
+      name: pi
+      state: absent
+      remove: yes
+    become: yes
+    tags: [users,administrators]
+
+  - name: Install ufw
+    apt: state=present pkg=ufw
+    tags: [ufw]
+
+  # ufw supports connection rate limiting, which is useful for protecting
+  # against brute-force login attacks. ufw will deny connections if an IP
+  # address has attempted to initiate 6 or more connections in the last
+  # 30 seconds. See  http://www.debian-administration.org/articles/187
+  # for details. Typical usage is:
+  - name: Set ufw rule to prevent brute force login on ssh
+    ufw:
+      rule: limit
+      port: ssh
+      proto: tcp
+    tags: [ufw,ssh]
+
+  # Allow ss. (Note that as ufw manages its own state, simply removing
+  # a rule=allow task can leave those ports exposed. Either use delete=yes
+  # or a separate state=reset task)
+  - name: Set ufw rule to allow ssh
+    ufw:
+      rule: allow
+      name: OpenSSH
+    tags: [ufw,ssh]
+
+  # enable ufw service
+  - name: Enable ufw service
+    ufw:
+      state: enabled
+    tags: [ufw]
