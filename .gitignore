@@ -1,3 +1,5 @@
 /playbooks/.ansible_facts
 /playbooks/.vault-domotic
 /playbooks/home.inv
+/playbooks/*.retry
+/playbooks/roles.galaxy
