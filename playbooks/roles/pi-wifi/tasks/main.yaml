@@ -13,5 +13,5 @@
 ---
 - name: Ensure wifi configuration
   template: src=../templates/wpa_supplicant.conf dest=/etc/wpa_supplicant/wpa_supplicant.conf
-  when: ansible_wlan0
+  when: ansible_wlan0 and wifi_enable is defined and wifi_enable == True
   notify: reboot machine
