@@ -41,3 +41,10 @@ admin_user: !vault |
           6337646431313564300a383463633161336234396661396539313630626564653534653064353465
           3763
 admin_pub_key: "{{ lookup('file','~/.ssh/id_rsa.pub') }}"
+
+# OS hardening
+os_auth_pw_max_age: 99999
+
+# SSH hardening
+# https://github.com/dev-sec/ansible-ssh-hardening/issues/115
+ssh_use_pam: true
