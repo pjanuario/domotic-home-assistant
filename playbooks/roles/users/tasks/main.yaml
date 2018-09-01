@@ -33,7 +33,7 @@
       name: "{{ admin_user }}"
       home: "/home/{{ admin_user }}"
       group: administrators
-      groups: "administrators,pi,sudo"
+      groups: "administrators,sudo"
       shell: /bin/bash
       state: present
     tags: [administrators]
