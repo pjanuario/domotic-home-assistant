@@ -71,6 +71,12 @@ For each secret property that exists in `group_vars/all.yaml` you need to execut
 
 Pick the output and replace on the file.
 
+### Ansible Galaxy Roles
+
+Install ansible galaxy roles.
+
+    $ ansible-galaxy install -r requirements.yml
+
 ## Create a admin user
 
 The bootstrap role is going to remove the default user, so before we run it we need to ensure that the we can connect using ssh with a new admin user.
