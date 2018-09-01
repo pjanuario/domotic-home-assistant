@@ -3,10 +3,9 @@
     apt: update_cache=yes cache_valid_time=3600
     tags: [update-packages]
 
-  # disabled due to problem https://github.com/pjanuario/domotic-home-assistant/issues/1
-  # - name: Upgrade APT to the latest packages
-  #   apt: upgrade=safe
-  #   tags: [update-packages]
+  - name: Upgrade APT to the latest packages
+    apt: upgrade=safe
+    tags: [update-packages]
 
   - name: Remove unrequired packages
     apt: autoremove=yes
