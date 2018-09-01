@@ -49,3 +49,10 @@ os_auth_pam_passwdqc_enable: False
 # SSH hardening
 # https://github.com/dev-sec/ansible-ssh-hardening/issues/115
 ssh_use_pam: true
+
+# Docker
+# Edition can be one of: 'ce' (Community Edition) or 'ee' (Enterprise Edition).
+docker_edition: 'ce'
+docker_package: "docker-{{ docker_edition }}"
+# Docker Compose options.
+docker_install_compose: False
