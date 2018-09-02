@@ -8,3 +8,4 @@
     - { role: ssh-hardening, tags: [ hardening, ssh-hardening ] }
     - { role: docker, tags: [ docker ] }
     - { role: pip, tags: [ pip ] }
+    - { role: postgres, tags: [ docker, postgres ] }

@@ -1,0 +1,3 @@
+CREATE USER {{ item.db_username }} WITH PASSWORD '{{ item.db_password }}';
+CREATE DATABASE {{ item.db_name }};
+GRANT ALL PRIVILEGES ON DATABASE {{ item.db_name }} TO {{ item.db_username }};

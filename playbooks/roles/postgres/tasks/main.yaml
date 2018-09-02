@@ -1,0 +1,39 @@
+---
+  - name: Make sure /var/lib/postgresql/initdb.d config directory exists
+    file:
+      path: /var/lib/postgresql/initdb.d
+      state: directory
+
+  - name: Make sure /var/lib/postgresql/data config directory exists
+    file:
+      path: /var/lib/postgresql/data
+      state: directory
+
+  - name: Create DB init scripts
+    template:
+      src: db.sql.j2
+      dest: "/var/lib/postgresql/initdb.d/{{ item.db_name }}.sql"
+    with_items: "{{ postgres_user_databases }}"
+
+  - name: Install pip3
+    apt: state=present pkg=python3-pip
+
+  - pip:
+      name: docker
+
+  - name: Ensure postgres container is running
+    docker_container:
+      name: postgres
+      image: "{{ postgres_image }}"
+      env:
+        POSTGRES_USER: "{{ postgres_user }}"
+        POSTGRES_PASSWORD: "{{ postgres_password }}"
+        POSTGRES_DB: "{{ postgres_db }}"
+      exposed:
+        - "5432:5432"
+      ports:
+        - "5432:5432"
+      restart_policy: always
+      volumes:
+        - /var/lib/postgresql/data:/var/lib/postgresql/data:rw
+        - /var/lib/postgresql/initdb.d:/docker-entrypoint-initdb.d:ro
