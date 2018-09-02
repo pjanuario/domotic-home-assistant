@@ -1,4 +1,8 @@
 ---
+  - name: Adjust APT source.list
+    copy: src=files/sources.list dest=/etc/apt/sources.list
+    tags: [update-packages]
+
   - name: Update APT package cache
     apt: update_cache=yes cache_valid_time=3600
     tags: [update-packages]
