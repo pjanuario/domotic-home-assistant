@@ -14,3 +14,6 @@
 - name: pip
   src: geerlingguy.pip
   version: 1.2.1
+- name: ntp
+  src: geerlingguy.ntp
+  version: 1.6.2

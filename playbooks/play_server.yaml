@@ -2,6 +2,7 @@
   become: true
 
   roles:
+    - { role: ntp, tags: [ ntp ] }
     - { role: users, tags: [ users ] }
     - { role: firewall, tags: [ firewall ] }
     - { role: os-hardening, tags: [ hardening, os-hardening ] }
