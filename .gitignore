@@ -3,3 +3,5 @@
 /playbooks/home.inv
 /playbooks/*.retry
 /playbooks/roles.galaxy
+
+/.data
