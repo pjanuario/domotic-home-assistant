@@ -7,7 +7,7 @@
 /.data
 /playbooks/.vagrant
 
-/*/*.crt
-/*/*.key
-/*/*.keystore
-/*/*.p12
+/**/*.crt
+/**/*.key
+/**/*.keystore
+/**/*.p12
