@@ -1,0 +1,105 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 66.2
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Lisbon
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+# introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+  # Secrets are defined in the file secrets.yaml
+  # api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  # base_url: example.duckdns.org:8123
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# Text to speech
+tts:
+  - platform: google
+    language: 'pt'
+
+# Cloud
+cloud:
+
+## InfluxDB config
+# influxdb:
+#   host: !secret influxdb_host
+#   port: !secret influxdb_port
+#   database: !secret influxdb_database
+#   username: !secret influxdb_username
+#   password: !secret influxdb_password
+#   # ssl: true
+#   # verify_ssl: true
+#   # max_retries: 3
+#   default_measurement: state
+#   tags:
+#     instance: prod
+#     source: homeassistant
+
+## MQTT broker
+# TODO: Add authentication to the broker
+mqtt:
+  broker: !secret mqtt_broker
+  port: !secret mqtt_port
+  client_id: !secret mqtt_client_id
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+
+## Use a POSTGRES recorder
+recorder:
+  purge_keep_days: 365
+  db_url: !secret recorder_db_url
+
+###########INCLUDES#####
+sensor: !include sensors.yaml
+switch: !include switchs.yaml
+group: !include groups.yaml
+automation: !include automations.yaml
+#input_number: !include input_number.yaml
+# input_select: !include input_select.yaml
+# input_boolean: !include input_booleans.yaml
+#cover: !include cover.yaml
+
+# device_tracker:  !include known_devices.yaml

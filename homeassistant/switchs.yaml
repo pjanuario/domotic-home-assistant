@@ -1,0 +1,204 @@
+#sonoff# 4ch_1
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_1_1"
+    state_topic: "4ch_1/stat"
+    command_topic: "4ch_1"
+    qos: 0
+    payload_on: "1on"
+    payload_off: "1off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_1_2"
+    state_topic: "4ch_1/stat"
+    command_topic: "4ch_1"
+    qos: 0
+    payload_on: "2on"
+    payload_off: "2off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_1_3"
+    state_topic: "4ch_1/stat"
+    command_topic: "4ch_1"
+    qos: 0
+    payload_on: "3on"
+    payload_off: "3off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_1_4"
+    state_topic: "4ch_1/stat"
+    command_topic: "4ch_1"
+    qos: 0
+    payload_on: "4on"
+    payload_off: "4off"
+    retain: true
+
+#sonoff# 4ch_2
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_2_1"
+    state_topic: "4ch_2/stat"
+    command_topic: "4ch_2"
+    qos: 0
+    payload_on: "1on"
+    payload_off: "1off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_2_2"
+    state_topic: "4ch_2/stat"
+    command_topic: "4ch_2"
+    qos: 0
+    payload_on: "2on"
+    payload_off: "2off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_2_3"
+    state_topic: "4ch_2/stat"
+    command_topic: "4ch_2"
+    qos: 0
+    payload_on: "3on"
+    payload_off: "3off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_2_4"
+    state_topic: "4ch_2/stat"
+    command_topic: "4ch_2"
+    qos: 0
+    payload_on: "4on"
+    payload_off: "4off"
+    retain: true
+
+#sonoff# 4ch_3
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_3_1"
+    state_topic: "4ch_3/stat"
+    command_topic: "4ch_3"
+    qos: 0
+    payload_on: "1on"
+    payload_off: "1off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_3_2"
+    state_topic: "4ch_3/stat"
+    command_topic: "4ch_3"
+    qos: 0
+    payload_on: "2on"
+    payload_off: "2off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_3_3"
+    state_topic: "4ch_3/stat"
+    command_topic: "4ch_3"
+    qos: 0
+    payload_on: "3on"
+    payload_off: "3off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_3_4"
+    state_topic: "4ch_3/stat"
+    command_topic: "4ch_3"
+    qos: 0
+    payload_on: "4on"
+    payload_off: "4off"
+    retain: true
+
+#sonoff# 4ch_4
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_4_1"
+    state_topic: "4ch_4/stat"
+    command_topic: "4ch_4"
+    qos: 0
+    payload_on: "1on"
+    payload_off: "1off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_4_2"
+    state_topic: "4ch_4/stat"
+    command_topic: "4ch_4"
+    qos: 0
+    payload_on: "2on"
+    payload_off: "2off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_4_3"
+    state_topic: "4ch_4/stat"
+    command_topic: "4ch_4"
+    qos: 0
+    payload_on: "3on"
+    payload_off: "3off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_4_4"
+    state_topic: "4ch_4/stat"
+    command_topic: "4ch_4"
+    qos: 0
+    payload_on: "4on"
+    payload_off: "4off"
+    retain: true
+
+#sonoff# 4ch_5
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_5_1"
+    state_topic: "4ch_5/stat"
+    command_topic: "4ch_5"
+    qos: 0
+    payload_on: "1on"
+    payload_off: "1off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_5_2"
+    state_topic: "4ch_5/stat"
+    command_topic: "4ch_5"
+    qos: 0
+    payload_on: "2on"
+    payload_off: "2off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_5_3"
+    state_topic: "4ch_5/stat"
+    command_topic: "4ch_5"
+    qos: 0
+    payload_on: "3on"
+    payload_off: "3off"
+    retain: true
+
+  - platform: mqtt
+    icon: mdi:lightbulb-outline
+    name: "4ch_5_4"
+    state_topic: "4ch_5/stat"
+    command_topic: "4ch_5"
+    qos: 0
+    payload_on: "4on"
+    payload_off: "4off"
+    retain: true

@@ -1,0 +1,55 @@
+#DARK_SKY
+- platform: darksky
+  api_key: 83c567c0b9716963557fc5541de601ba
+  language: pt
+  monitored_conditions:
+    - summary
+    - precip_type
+    - precip_probability
+    - temperature
+    - humidity
+    - temperature_max
+    - temperature_min
+
+- platform: speedtest
+  monitored_conditions:
+    - ping
+    - download
+    - upload
+
+- platform: yr
+  monitored_conditions:
+  - temperature
+  - symbol
+  - precipitation
+
+
+- platform: time_date
+  display_options:
+  - 'time'
+  - 'date'
+
+- platform: template
+  sensors:
+    estadodotempo:
+      friendly_name: 'Ceu'
+      value_template: >
+        {%- if is_state('sensor.dark_sky_summary', 'Partly Cloudy') -%}
+          Parcialmente Nublado
+        {%- elif is_state('sensor.dark_sky_summary', 'Clear') -%}
+          Limpo
+        {%- elif is_state('sensor.dark_sky_summary', 'rain') -%}
+          Chuvoso
+        {%- elif is_state('sensor.dark_sky_summary', 'Mostly Cloudy') -%}
+          Muito Nublado
+        {%- endif -%}
+    sunrise:
+      friendly_name: 'Amanhecer'
+      value_template: '{{ as_timestamp(states.sun.sun.attributes.next_rising)|timestamp_custom("%H:%M:%S") }}'
+      entity_id:
+        - sun.sun
+    sunset:
+      friendly_name: 'Por do Sol'
+      value_template: '{{ as_timestamp(states.sun.sun.attributes.next_setting)|timestamp_custom("%H:%M:%S") }}'
+      entity_id:
+        - sun.sun
