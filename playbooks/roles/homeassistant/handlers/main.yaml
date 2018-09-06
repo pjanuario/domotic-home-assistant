@@ -1,0 +1,6 @@
+---
+- name: restart homeassistant
+  docker_container:
+    name: homeassistant
+    state: started
+    restart: yes

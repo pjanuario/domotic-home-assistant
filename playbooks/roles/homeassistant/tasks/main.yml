@@ -1,0 +1,63 @@
+---
+  - name: Make sure /var/lib/homeassistant directory exists
+    file:
+      path: /var/lib/homeassistant
+      state: directory
+
+  - name: Make sure /var/lib/homeassistant/config directory exists
+    file:
+      path: /var/lib/homeassistant/config
+      state: directory
+      owner: "1000"
+      group: "1000"
+      mode: "g+rwx"
+
+  - name: Copy homeassistant configuration folder
+    copy:
+      src: "{{ homeassistant_config_path }}/{{ item }}"
+      dest: "/var/lib/homeassistant/config/{{item}}"
+      owner: "1000"
+      group: "1000"
+      mode: "g+rwx"
+    with_items: "{{ homeassistant_config_files }}"
+    notify: restart homeassistant
+
+  - name: Install pip3
+    apt: state=present pkg=python3-pip
+
+  - pip:
+      name: docker
+
+  - name: "Pull docker image {{ homeassistant_image }}"
+    docker_image:
+      name: "{{ homeassistant_image }}"
+
+  - name: Ensure homeassistant container is present
+    docker_container:
+      name: homeassistant
+      image: "{{ homeassistant_image }}"
+      state: present
+      links:
+        - postgres:pg
+        - mqtt
+      exposed:
+        - "8123:8123"
+      ports:
+        - "8123:8123"
+      restart_policy: always
+      volumes:
+        - /var/lib/homeassistant/config:/config:rw
+    notify: restart homeassistant
+
+  # Flush the handler to ensure container are started or restarted in case it needs
+  - name: Flushing handlers
+    meta: flush_handlers
+
+  - name: Wait for homeassistant to be running
+    uri:
+      url: http://localhost:8123
+      status_code: 200
+    register: result
+    until: result.status == 200
+    retries: 60
+    delay: 5
