@@ -1,0 +1,100 @@
+---
+  - name: Make sure /var/lib/elasticsearch directory exists
+    file:
+      path: /var/lib/elasticsearch
+      state: directory
+
+
+  - name: Make sure /var/lib/elasticsearch/config directory exists
+    file:
+      path: /var/lib/elasticsearch/config
+      state: directory
+
+  # Elasticsearch container runs with user elasticsearch uid:1000 and guid: 1000
+  # it needs to have permissions to write on the folder
+  - name: Make sure /var/lib/elasticsearch/data directory exists
+    file:
+      path: /var/lib/elasticsearch/data
+      state: directory
+      owner: "1000"
+      group: "1000"
+      mode: "g+rwx"
+
+  - name: Make sure /var/lib/elasticsearch/certs directory exists
+    file:
+      path: /var/lib/elasticsearch/config/certs
+      state: directory
+
+  - name: Copy elasticsearch config file
+    template:
+      src: elasticsearch.yml.j2
+      dest: /var/lib/elasticsearch/config/elasticsearch.yml
+    notify: restart elasticsearch
+
+  - name: Copying elasticsearch ca certificate
+    copy:
+      src: "{{ elasticsearch_ca }}"
+      dest: /var/lib/elasticsearch/config/certs/ca.crt
+
+  - name: Copying elasticsearch keystore
+    copy:
+      src: "{{ elasticsearch_keystore }}"
+      dest: /var/lib/elasticsearch/config/elasticsearch.keystore
+
+  - name: Copying elasticsearch key
+    copy:
+      src: "{{ elasticsearch_key }}"
+      dest: /var/lib/elasticsearch/config/certs/elasticsearch.key
+
+  - name: Copying elasticsearch certificate
+    copy:
+      src: "{{ elasticsearch_crt }}"
+      dest: /var/lib/elasticsearch/config/certs/elasticsearch.crt
+
+  - name: Install pip3
+    apt: state=present pkg=python3-pip
+
+  - pip:
+      name: docker
+
+  - name: "Pull docker image {{ elasticsearch_image }}"
+    docker_image:
+      name: "{{ elasticsearch_image }}"
+
+  # Elasticsearch requires this change
+  # https://www.elastic.co/guide/en/elasticsearch/reference/6.4/vm-max-map-count.html#vm-max-map-count
+  - name: "Set sysctl vm.max_map_count required by elasticsearch"
+    sysctl:
+      name: vm.max_map_count
+      value: 262144
+      state: present
+
+  - name: Ensure elasticsearch container is running
+    docker_container:
+      name: elasticsearch
+      image: "{{ elasticsearch_image }}"
+      state: present
+      exposed:
+        - "9200:9200"
+      ports:
+        - "9200:9200"
+      restart_policy: always
+      volumes:
+        - /var/lib/elasticsearch/data:/usr/share/elasticsearch/data:rw
+        - /var/lib/elasticsearch/config/certs:/usr/share/elasticsearch/config/certs:ro
+        - /var/lib/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+        - /var/lib/elasticsearch/config/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore:ro
+
+  # Flush the handler to ensure container are started or restarted in case it needs
+  - name: Flushing handlers
+    meta: flush_handlers
+
+  - name: Wait for elasticsearch to be running
+    uri:
+      url: https://localhost:9200
+      status_code: 200
+      validate_certs: no
+    register: result
+    until: result.status == 200
+    retries: 60
+    delay: 1

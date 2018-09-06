@@ -1,0 +1,7 @@
+---
+elasticsearch_image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
+elasticsearch_cluster_name: almighty-cluster
+elasticsearch_ca:
+elasticsearch_keystore:
+elasticsearch_key:
+elasticsearch_crt:
