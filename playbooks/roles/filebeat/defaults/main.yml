@@ -1,0 +1,6 @@
+---
+kibana_image: docker.elastic.co/beats/filebeat:6.4.0
+kibana_ca:
+kibana_keystore:
+filebeat_modules: ["system"]
+filebeat_inputs: ["docker"]

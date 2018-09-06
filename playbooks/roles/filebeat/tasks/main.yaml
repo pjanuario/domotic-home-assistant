@@ -1,0 +1,100 @@
+---
+  - name: Make sure /var/lib/filebeat directory exists
+    file:
+      path: /var/lib/filebeat
+      state: directory
+
+  - name: Make sure /var/lib/filebeat/config directory exists
+    file:
+      path: /var/lib/filebeat/config
+      state: directory
+
+  - name: Make sure /var/lib/filebeat/data directory exists
+    file:
+      path: /var/lib/filebeat/data
+      state: directory
+
+  - name: Make sure /var/lib/filebeat/certs directory exists
+    file:
+      path: /var/lib/filebeat/config/certs
+      state: directory
+
+  - name: Make sure /var/lib/filebeat/modules.d directory exists
+    file:
+      path: /var/lib/filebeat/config/modules.d
+      state: directory
+
+  - name: Make sure /var/lib/filebeat/inputs.d directory exists
+    file:
+      path: /var/lib/filebeat/config/inputs.d
+      state: directory
+
+  - name: Copy filebeat config file
+    template:
+      src: filebeat.yml.j2
+      dest: /var/lib/filebeat/config/filebeat.yml
+    notify: restart filebeat
+
+  - name: Copying filebeat ca certificate
+    copy:
+      src: "{{ filebeat_ca }}"
+      dest: /var/lib/filebeat/config/certs/ca.crt
+
+  - name: Copying filebeat keystore
+    copy:
+      src: "{{ filebeat_keystore }}"
+      dest: /var/lib/filebeat/config/filebeat.keystore
+
+  - name: Copying modules.d config
+    copy:
+      src: "modules.d/{{ item }}.yml"
+      dest: "/var/lib/filebeat/config/modules.d/{{ item }}.yml"
+    with_items: "{{ filebeat_modules }}"
+
+  - name: Copying inputs.d config
+    copy:
+      src: "inputs.d/{{ item }}.yml"
+      dest: "/var/lib/filebeat/config/inputs.d/{{ item }}.yml"
+    with_items: "{{ filebeat_inputs }}"
+
+  - name: Install pip3
+    apt: state=present pkg=python3-pip
+
+  - pip:
+      name: docker
+
+  - name: "Pull docker image {{ filebeat_image }}"
+    docker_image:
+      name: "{{ filebeat_image }}"
+
+  - name: Ensure filebeat container is running
+    docker_container:
+      name: filebeat
+      image: "{{ filebeat_image }}"
+      state: present
+      # need to run as root to access the docker logs
+      user: root
+      # -e flag to log to stderr and disable syslog/file output
+      command: --strict.perms=false -e
+      links: ["elasticsearch", "kibana"]
+      restart_policy: always
+      volumes:
+        # Mount filebeat configurations
+        - /var/lib/filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+        - /var/lib/filebeat/config/filebeat.keystore:/usr/share/filebeat/filebeat.keystore:ro
+        - /var/lib/filebeat/config/certs:/usr/share/filebeat/certs:ro
+        - /var/lib/filebeat/config/modules.d:/usr/share/filebeat/modules.d:ro
+        - /var/lib/filebeat/config/inputs.d:/usr/share/filebeat/inputs.d:ro
+        # Mount filebeat data folder. This is used to persist the registry file between restarts, so to avoid data duplication
+        - /var/lib/filebeat/data:/usr/share/filebeat/data/:rw
+        #Mount the hosts system log directory. This represents the logs of the VM hosting docker.
+        - /var/log/:/hostfs/var/log/:ro
+        #Mount the docker logs for indexing by docker input
+        - /var/lib/docker/containers:/var/lib/docker/containers:ro
+        #Mount the docker socket to grab additional information from containers
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+    notify: restart filebeat
+
+  # Flush the handler to ensure container are started or restarted in case it needs
+  - name: Flushing handlers
+    meta: flush_handlers
