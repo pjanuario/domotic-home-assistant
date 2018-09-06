@@ -1,0 +1,89 @@
+---
+  - name: Make sure /var/lib/kibana directory exists
+    file:
+      path: /var/lib/kibana
+      state: directory
+
+  - name: Make sure /var/lib/kibana/config directory exists
+    file:
+      path: /var/lib/kibana/config
+      state: directory
+
+  - name: Make sure /var/lib/kibana/data directory exists
+    file:
+      path: /var/lib/kibana/data
+      state: directory
+      owner: "1000"
+      group: "1000"
+      mode: "g+rwx"
+
+  - name: Make sure /var/lib/kibana/certs directory exists
+    file:
+      path: /var/lib/kibana/config/certs
+      state: directory
+
+  - name: Copy kibana config file
+    template:
+      src: kibana.yml.j2
+      dest: /var/lib/kibana/config/kibana.yml
+    notify: restart kibana
+
+  - name: Copying kibana ca certificate
+    copy:
+      src: "{{ kibana_ca }}"
+      dest: /var/lib/kibana/config/certs/ca.crt
+
+  - name: Copying kibana keystore
+    copy:
+      src: "{{ kibana_keystore }}"
+      dest: /var/lib/kibana/data/kibana.keystore
+
+  - name: Copying kibana key
+    copy:
+      src: "{{ kibana_key }}"
+      dest: /var/lib/kibana/config/certs/kibana.key
+
+  - name: Copying kibana certificate
+    copy:
+      src: "{{ kibana_crt }}"
+      dest: /var/lib/kibana/config/certs/kibana.crt
+
+  - name: Install pip3
+    apt: state=present pkg=python3-pip
+
+  - pip:
+      name: docker
+
+  - name: "Pull docker image {{ kibana_image }}"
+    docker_image:
+      name: "{{ kibana_image }}"
+
+  - name: Ensure kibana container is present
+    docker_container:
+      name: kibana
+      image: "{{ kibana_image }}"
+      state: present
+      links: elasticsearch
+      exposed:
+        - "5601:5601"
+      ports:
+        - "5601:5601"
+      restart_policy: always
+      volumes:
+        - /var/lib/kibana/data/kibana.keystore:/usr/share/kibana/data/kibana.keystore:ro
+        - /var/lib/kibana/config/certs:/usr/share/kibana/config/certs:ro
+        - /var/lib/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+    notify: restart kibana
+
+  # Flush the handler to ensure container are started or restarted in case it needs
+  - name: Flushing handlers
+    meta: flush_handlers
+
+  - name: Wait for kibana to be running
+    uri:
+      url: http://localhost:5601
+      status_code: 200
+    register: result
+    until: result.status == 200
+    retries: 60
+    delay: 5

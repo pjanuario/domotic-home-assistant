@@ -1,0 +1,6 @@
+---
+kibana_image: docker.elastic.co/kibana/kibana:6.4.0
+kibana_ca:
+kibana_keystore:
+kibana_key:
+kibana_crt:

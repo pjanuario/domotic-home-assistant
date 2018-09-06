@@ -1,0 +1,6 @@
+---
+- name: restart kibana
+  docker_container:
+    name: kibana
+    state: started
+    restart: yes
