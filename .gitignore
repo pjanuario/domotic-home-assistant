@@ -6,3 +6,8 @@
 
 /.data
 /playbooks/.vagrant
+
+/*/*.crt
+/*/*.key
+/*/*.keystore
+/*/*.p12
