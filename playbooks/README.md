@@ -4,7 +4,7 @@ This directory contains ansible playbooks to configure several components of the
 
 ## Requirements
 
-This playbook assumes that raspberry is running raspbian stretch version and that default ssh is enbaled, since it assumes a headless raspberry pi.
+This playbook was only tested on Ubuntu Bionic.
 
 ### Install raspbian
 
