@@ -1,0 +1,3 @@
+CREATE USER homeassistant WITH PASSWORD 'changeme';
+CREATE DATABASE homeassistant;
+GRANT ALL PRIVILEGES ON DATABASE homeassistant TO homeassistant;
