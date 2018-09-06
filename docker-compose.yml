@@ -1,0 +1,63 @@
+version: '3.6'
+services:
+  pg:
+    env_file: ['.env']
+    image: postgres:10.5-alpine
+    container_name: ha.pg
+    volumes:
+      - .data/postgres:/var/lib/postgresql/data:rw
+      - ./postgres/initdb.d:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5432:5432"
+
+  # influxdb:
+  #   env_file: ['.env']
+  #   container_name: ha.influxdb
+  #   image: influxdb:1.6-alpine
+  #   command: influxd -config /etc/influxdb/config.conf
+  #   volumes:
+  #     - .data/influxdb:/var/lib/influxdb:rw
+  #     - ./influxdb/config.toml:/etc/influxdb/config.conf:ro
+  #     - ./influxdb/initdb.d:/docker-entrypoint-initdb.d:ro
+  #   ports:
+  #     - 8086:8086
+  #   restart: always
+  #
+  # chronograf:
+  #   container_name: ha.chronograf
+  #   image: chronograf:1.6-alpine
+  #   ports:
+  #     - 8888:8888
+  #   links:
+  #     - influxdb
+  #   restart: always
+
+  mqtt:
+    container_name: ha.mqtt
+    image: matteocollina/mosca
+    entrypoint: ["/usr/src/app/bin/mosca", "-d", "/db", "-v", "--credentials", "/config/.credentials.json"]
+    volumes:
+      - .data/mosca:/db:rw
+      - ./mqtt/credentials.json:/config/.credentials.json:ro
+    ports:
+      - 1883:1883
+
+  ha:
+    env_file: ['.env']
+    container_name: ha
+    image: homeassistant/home-assistant:0.77.3
+    links:
+      - mqtt
+      # - influxdb
+      - pg
+    volumes:
+      - ./homeassistant/automations.yaml:/config/automations.yaml:rw
+      - ./homeassistant/configuration.yaml:/config/configuration.yaml:rw
+      - ./homeassistant/customize.yaml:/config/customize.yaml:rw
+      - ./homeassistant/groups.yaml:/config/groups.yaml:rw
+      - ./homeassistant/scripts.yaml:/config/scripts.yaml:rw
+      - ./homeassistant/secrets.yaml:/config/secrets.yaml:rw
+      - ./homeassistant/sensors.yaml:/config/sensors.yaml:rw
+      - ./homeassistant/switchs.yaml:/config/switchs.yaml:rw
+    ports:
+      - 8123:8123
