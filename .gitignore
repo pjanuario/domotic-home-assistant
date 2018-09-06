@@ -15,4 +15,5 @@
 homeassistant/secrets.yaml
 mqtt/credentials.json
 postgres/initdb.d/homeassistant.sql
+/.env
 
