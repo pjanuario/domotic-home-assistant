@@ -21,6 +21,10 @@
   - pip:
       name: docker
 
+  - name: "Pull docker image {{ postgres_image }}"
+    docker_image:
+      name: "{{ postgres_image }}"
+
   - name: Ensure postgres container is running
     docker_container:
       name: postgres
