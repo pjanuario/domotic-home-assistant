@@ -13,3 +13,5 @@
 /**/*.p12
 
 homeassistant/secrets.yaml
+mqtt/credentials.json
+
