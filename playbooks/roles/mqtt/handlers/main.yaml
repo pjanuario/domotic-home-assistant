@@ -1,0 +1,6 @@
+---
+- name: restart mqtt
+  docker_container:
+    name: mqtt
+    state: started
+    restart: yes

@@ -1,0 +1,42 @@
+---
+  - name: Make sure /var/lib/mosca/config config directory exists
+    file:
+      path: /var/lib/mosca/config
+      state: directory
+
+  - name: Make sure /var/lib/mosca/data config directory exists
+    file:
+      path: /var/lib/mosca/data
+      state: directory
+
+  - name: Copy Mosca credentials
+    template:
+      src: credentials.json.j2
+      dest: "/var/lib/mosca/config/.credentials.json"
+    notify: restart mqtt
+
+  - name: Install pip3
+    apt: state=present pkg=python3-pip
+
+  - pip:
+      name: docker
+
+  - name: "Pull docker image {{ mqtt_image }}"
+    docker_image:
+      name: "{{ mqtt_image }}"
+
+  - name: Ensure mqtt container is present
+    docker_container:
+      name: mqtt
+      image: "{{ mqtt_image }}"
+      state: present
+      entrypoint: ["/usr/src/app/bin/mosca", "-d", "/db", "-v", "--credentials", "/config/.credentials.json"]
+      exposed:
+        - "1883:1883"
+      ports:
+        - "1883:1883"
+      restart_policy: always
+      volumes:
+        - /var/lib/mosca/data:/db:rw
+        - /var/lib/mosca/config/.credentials.json:/config/.credentials.json:ro
+    notify: restart mqtt

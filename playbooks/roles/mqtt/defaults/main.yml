@@ -1,0 +1,5 @@
+---
+mqtt_image: matteocollina/mosca:latest
+mqtt_user_username:
+mqtt_user_salt:
+mqtt_user_hash: 
