@@ -1,5 +1,5 @@
-[raspberry]
-raspberry0 ansible_host=000.000.0.00
+[ubuntuvm]
+ubuntuvm ansible_host=127.0.0.1 ansible_user=vagrant ansible_port=2222 ansible_ssh_private_key_file=/path/to/playbooks/.vagrant/machines/default/virtualbox/private_key
 
-[raspberry:vars]
+[ubuntuvm:vars]
 ansible_python_interpreter=/usr/bin/python3
