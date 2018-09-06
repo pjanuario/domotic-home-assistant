@@ -5,3 +5,4 @@
 /playbooks/roles.galaxy
 
 /.data
+/playbooks/.vagrant
