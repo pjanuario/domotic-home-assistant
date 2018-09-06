@@ -9,4 +9,9 @@
     - { role: ssh-hardening, tags: [ hardening, ssh-hardening ] }
     - { role: docker, tags: [ docker ] }
     - { role: pip, tags: [ pip ] }
+    - { role: elasticsearch, tags: [ docker, elasticsearch ] }
+    - { role: kibana, tags: [ docker, kibana ] }
+    - { role: filebeat, tags: [ docker, filebeat ] }
     - { role: postgres, tags: [ docker, postgres ] }
+    - { role: mqtt, tags: [ docker, mqtt ] }
+    - { role: homeassistant, tags: [ docker, homeassistant ] }
