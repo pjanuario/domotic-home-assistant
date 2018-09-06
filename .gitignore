@@ -11,3 +11,5 @@
 /**/*.key
 /**/*.keystore
 /**/*.p12
+
+homeassistant/secrets.yaml
