@@ -1,0 +1,109 @@
+version: '3.6'
+networks: {elk: {}}
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
+    container_name: elasticsearch
+    networks: ['elk']
+    secrets:
+      - source: ca.crt
+        target: /usr/share/elasticsearch/config/certs/ca/ca.crt
+      - source: elasticsearch.yml
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+      - source: elasticsearch.keystore
+        target: /usr/share/elasticsearch/config/elasticsearch.keystore
+      - source: elasticsearch.key
+        target: /usr/share/elasticsearch/config/certs/elasticsearch/elasticsearch.key
+      - source: elasticsearch.crt
+        target: /usr/share/elasticsearch/config/certs/elasticsearch/elasticsearch.crt
+    ports: ['9200:9200']
+    volumes:
+      - ./.data/elasticsearch:/usr/share/elasticsearch/data
+    healthcheck:
+      test: curl --cacert /usr/share/elasticsearch/config/certs/ca/ca.crt -s https://localhost:9200 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.4.0
+    container_name: kibana
+    networks: ['elk']
+    secrets:
+      - source: kibana.yml
+        target: /usr/share/kibana/config/kibana.yml
+      - source: kibana.keystore
+        target: /usr/share/kibana/data/kibana.keystore
+      - source: ca.crt
+        target: /usr/share/kibana/config/certs/ca/ca.crt
+      - source: kibana.key
+        target: /usr/share/kibana/config/certs/kibana/kibana.key
+      - source: kibana.crt
+        target: /usr/share/kibana/config/certs/kibana/kibana.crt
+    ports: ['5601:5601']
+    depends_on: ['elasticsearch']
+    healthcheck:
+      test: curl --cacert /usr/share/elasticsearch/config/certs/ca/ca.crt -s https://localhost:5601 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:6.4.0
+    container_name: filebeat
+    networks: ['elk']
+    user: root
+    # -e flag to log to stderr and disable syslog/file output
+    command: --strict.perms=false -e
+    secrets:
+      - source: filebeat.yml
+        target: /usr/share/filebeat/filebeat.yml
+      - source: filebeat.keystore
+        target: /usr/share/filebeat/filebeat.keystore
+      - source: ca.crt
+        target: /usr/share/filebeat/certs/ca/ca.crt
+    volumes:
+      #Mount the inputs directory. Users can in turn add inputs to this directory and they will be dynamically loaded
+      - ./filebeat/inputs.d/:/usr/share/filebeat/inputs.d/
+      #Mount the modules directory. Users can in turn add modules to this directory and they will be dynamically loaded
+      - ./filebeat/modules.d/:/usr/share/filebeat/modules.d/
+      #Mount the hosts system log directory. This represents the logs of the VM hosting docker. Consumed by the filebeat system module.
+      - /private/var/log/:/hostfs/var/log/:ro
+      #Mount the docker logs for indexing by the custom prospector ./config/filebeat/prospectors.d
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      #Mount the docker socket to grab additional information from containers
+      - /var/run/docker.sock:/var/run/docker.sock
+      #Named volume fsdata. This is used to persist the registry file between restarts, so to avoid data duplication
+      - ./.data/filebeat:/usr/share/filebeat/data/
+    depends_on: ['elasticsearch', 'kibana']
+    # healthcheck:
+    #   test: filebeat test config
+    #   interval: 30s
+    #   timeout: 15s
+    #   retries: 5
+
+secrets:
+  ca.crt:
+    file: ./ssl/ca/ca.crt
+  elasticsearch.yml:
+    file: ./elasticsearch/elasticsearch.yml
+  elasticsearch.keystore:
+    file: ./elasticsearch/elasticsearch.keystore
+  elasticsearch.key:
+    file: ./elasticsearch/elasticsearch.key
+  elasticsearch.crt:
+    file: ./elasticsearch/elasticsearch.crt
+  elasticsearch.p12:
+    file: ./elasticsearch/elasticsearch.p12
+  kibana.yml:
+    file: ./kibana/kibana.yml
+  kibana.keystore:
+    file: ./kibana/kibana.keystore
+  kibana.key:
+    file: ./kibana/kibana.key
+  kibana.crt:
+    file: ./kibana/kibana.crt
+  filebeat.yml:
+    file: ./filebeat/filebeat.yml
+  filebeat.keystore:
+    file: ./filebeat/filebeat.keystore

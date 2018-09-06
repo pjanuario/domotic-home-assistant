@@ -1,0 +1,94 @@
+######################## Filebeat Configuration ############################
+
+# This file is a full configuration example documenting all non-deprecated
+# options in comments. For a shorter configuration example, that contains only
+# the most common options, please see filebeat.yml in the same directory.
+#
+# You can find the full configuration reference here:
+# https://www.elastic.co/guide/en/beats/filebeat/index.html
+# https://raw.githubusercontent.com/elastic/beats/master/filebeat/filebeat.reference.yml
+#========================= Filebeat global options ============================
+
+# Enable filebeat config reloading
+filebeat.config:
+  inputs:
+    enabled: true
+    path: inputs.d/*.yml
+    reload.enabled: true
+    reload.period: 10s
+  modules:
+    enabled: true
+    path: modules.d/*.yml
+    reload.enabled: true
+    reload.period: 10s
+
+#================================ Processors ===================================
+
+# Processors are used to reduce the number of fields in the exported event or to
+# enhance the event with external metadata. This section defines a list of
+# processors that are applied one by one and the first one receives the initial
+processors:
+  # The following example enriches each event with docker metadata, it matches
+  # given fields to an existing container id and adds info from that container:
+  #
+  - add_docker_metadata: ~
+
+#================================ Outputs ======================================
+
+# Configure what output to use when sending the data collected by the beat.
+
+#-------------------------- Elasticsearch output -------------------------------
+output.elasticsearch:
+  # Boolean flag to enable or disable the output module.
+  enabled: true
+
+  # Array of hosts to connect to.
+  # Scheme and port can be left out and will be set to the default (http and 9200)
+  # In case you specify and additional path, the scheme is required: http://localhost:9200/path
+  # IPv6 addresses should always be defined as: https://[2001:db8::1]:9200
+  hosts: ["elasticsearch:9200"]
+
+  # Optional protocol and basic auth credentials.
+  protocol: "https"
+  username: elastic
+  # Read PW from filebeat.keystore
+  password: "${ELASTIC_PASSWORD}"
+
+  # SSL configuration. By default is off.
+  # List of root certificates for HTTPS server verifications
+  ssl.certificate_authorities: ["/usr/share/filebeat/certs/ca/ca.crt"]
+
+#============================== Dashboards =====================================
+# These settings control loading the sample dashboards to the Kibana index. Loading
+# the dashboards are disabled by default and can be enabled either by setting the
+# options here, or by using the `-setup` CLI flag or the `setup` command.
+setup.dashboards.enabled: false
+
+#============================== Kibana =====================================
+
+# Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
+# This requires a Kibana endpoint configuration.
+setup.kibana:
+
+  # Kibana Host
+  # Scheme and port can be left out and will be set to the default (http and 5601)
+  # In case you specify and additional path, the scheme is required: http://localhost:5601/path
+  # IPv6 addresses should always be defined as: https://[2001:db8::1]:5601
+  host: "kibana:5601"
+
+  # Optional protocol and basic auth credentials.
+  protocol: "http"
+  username: "elastic"
+  # Read PW from filebeat.keystore
+  password: "${ELASTIC_PASSWORD}"
+
+  # Use SSL settings for HTTPS. Default is true.
+  ssl.enabled: false
+
+#================================ Logging ======================================
+# There are four options for the log output: file, stderr, syslog, eventlog
+# The file output is the default.
+
+# Logging to rotating files. Set logging.to_files to false to disable logging to
+# files.
+logging.to_files: true
