@@ -1,0 +1,36 @@
+---
+  - name: Make sure /var/lib/curator directory exists
+    file:
+      path: /var/lib/curator
+      state: directory
+
+  - name: Make sure /var/lib/curator/config directory exists
+    file:
+      path: /var/lib/curator/config
+      state: directory
+
+  - name: Copy elasticsearch ca.crt
+    copy:
+      src: "{{ elasticsearch_ca }}"
+      dest: /var/lib/curator/config/ca.crt
+
+  - name: Copy curator config file
+    copy:
+      src: curator.yml
+      dest: /var/lib/curator/config/curator.yml
+
+  - name: Copy curator actions file
+    template:
+      src: actions.yml.j2
+      dest: /var/lib/curator/config/actions.yml
+
+  - name: "Pull docker image {{ curator_image }}"
+    docker_image:
+      name: "{{ curator_image }}"
+
+  - name: Creates a cron file under /etc/cron.d
+    cron:
+      name: Elasticsearch curator
+      minute: "{{ curator_schedule_minute }}"
+      hour: "{{ curator_schedule_hour }}"
+      job: "docker run --name curator --link elasticsearch -v  /var/lib/curator/config/ca.crt:/config/ca.crt:ro -v /var/lib/curator/config/actions.yml:/config/actions.yml:ro -v /var/lib/curator/config/curator.yml:/config/curator.yml:ro --rm {{ curator_image }} --config /config/curator.yml /config/actions.yml"

@@ -10,6 +10,7 @@
     - { role: docker, tags: [ docker ] }
     - { role: pip, tags: [ pip ] }
     - { role: elasticsearch, tags: [ docker, elasticsearch ] }
+    - { role: curator, tags: [ docker, curator ] }
     - { role: kibana, tags: [ docker, kibana ] }
     - { role: filebeat, tags: [ docker, filebeat ] }
     - { role: postgres, tags: [ docker, postgres ] }
