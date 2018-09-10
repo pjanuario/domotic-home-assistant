@@ -111,11 +111,11 @@ elasticsearch.ssl.certificateAuthorities: ["/usr/share/kibana/config/certs/ca/ca
 # translations.
 #i18n.defaultLocale: "en"
 
-xpack.security.enabled: false
-xpack.monitoring.enabled: false
-xpack.graph.enabled: false
-xpack.reporting.enabled: false
-xpack.ml.enabled: false
-xpack.watcher.enabled: false
-
-xpack.monitoring.ui.container.elasticsearch.enabled: false
+# xpack.security.enabled: false
+# xpack.monitoring.enabled: false
+# xpack.graph.enabled: false
+# xpack.reporting.enabled: false
+# xpack.ml.enabled: false
+# xpack.watcher.enabled: false
+#
+# xpack.monitoring.ui.container.elasticsearch.enabled: false
