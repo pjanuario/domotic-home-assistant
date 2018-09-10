@@ -1,0 +1,6 @@
+---
+curator_image: bobrik/curator:5.5.4
+curator_days: 15
+curator_schedule_hour: 5
+curator_schedule_minute: 0
+elasticsearch_ca: /var/lib/elasticsearch/config/certs/ca.crt
