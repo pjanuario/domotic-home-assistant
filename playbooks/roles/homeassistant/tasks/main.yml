@@ -12,6 +12,42 @@
       group: "1000"
       mode: "g+rwx"
 
+  - name: Make sure /var/lib/homeassistant/data directory exists
+    file:
+      path: /var/lib/homeassistant/data
+      state: directory
+      owner: "1000"
+      group: "1000"
+      mode: "g+rwx"
+    register: homeassistant_data_dir_create
+
+  - name: Copy homeassistant storage onboarding
+    copy:
+      src: onboarding
+      dest: /var/lib/homeassistant/data/onboarding
+      owner: "1000"
+      group: "1000"
+      mode: "g+rwx"
+    when: homeassistant_data_dir_create.changed
+
+  - name: Copy homeassistant storage auth
+    template:
+      src: auth.j2
+      dest: /var/lib/homeassistant/data/auth
+      owner: "1000"
+      group: "1000"
+      mode: "g+rwx"
+    when: homeassistant_data_dir_create.changed
+
+  - name: Copy homeassistant storage auth provider
+    template:
+      src: auth_provider.homeassistant.j2
+      dest: /var/lib/homeassistant/data/auth_provider.homeassistant
+      owner: "1000"
+      group: "1000"
+      mode: "g+rwx"
+    when: homeassistant_data_dir_create.changed
+
   - name: Copy homeassistant configuration folder
     copy:
       src: "{{ homeassistant_config_path }}/{{ item }}"
@@ -47,6 +83,7 @@
       restart_policy: always
       volumes:
         - /var/lib/homeassistant/config:/config:rw
+        - /var/lib/homeassistant/data:/config/.storage:rw
     notify: restart homeassistant
 
   # Flush the handler to ensure container are started or restarted in case it needs
