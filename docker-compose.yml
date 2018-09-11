@@ -59,5 +59,6 @@ services:
       - ./homeassistant/secrets.yaml:/config/secrets.yaml:rw
       - ./homeassistant/sensors.yaml:/config/sensors.yaml:rw
       - ./homeassistant/switchs.yaml:/config/switchs.yaml:rw
+      - ./.data/homeassitant:/config/.storage:rw
     ports:
       - 8123:8123
