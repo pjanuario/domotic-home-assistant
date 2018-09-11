@@ -45,6 +45,9 @@ admin_pub_key: "{{ lookup('file','~/.ssh/id_rsa.pub') }}"
 # OS hardening
 os_auth_pw_max_age: 99999
 os_auth_pam_passwdqc_enable: False
+sysctl_overwrite:
+  # Enable IPv4 traffic forwarding required for docker.
+  net.ipv4.ip_forward: 1
 
 # SSH hardening
 # https://github.com/dev-sec/ansible-ssh-hardening/issues/115
