@@ -12,6 +12,9 @@ homeassistant:
   time_zone: Europe/Lisbon
   # Customization file
   customize: !include customize.yaml
+  auth_providers:
+    - type: homeassistant
+    - type: legacy_api_password
 
 # Show links to resources in log and frontend
 # introduction:
@@ -27,6 +30,7 @@ http:
   # api_password: !secret http_password
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
   # base_url: example.duckdns.org:8123
+  api_password: !secret http_api_password
 
 # Checks for available updates
 # Note: This component will send some information about your system to
