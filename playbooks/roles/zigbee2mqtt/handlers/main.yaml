@@ -1,0 +1,6 @@
+---
+- name: restart zigbee2mqtt
+  docker_container:
+    name: zigbee2mqtt
+    state: started
+    restart: yes

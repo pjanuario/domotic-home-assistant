@@ -1,0 +1,35 @@
+---
+  - name: Make sure /var/lib/zigbee2mqtt/config directory exists
+    file:
+      path: /var/lib/zigbee2mqtt/config
+      state: directory
+
+  - name: Copy Zigbee2MQTT configuration
+    template:
+      src: configuration.yml.j2
+      dest: "/var/lib/zigbee2mqtt/config/configuration.yaml"
+    notify: restart zigbee2mqtt
+
+  - name: Install pip3
+    apt: state=present pkg=python3-pip
+
+  - pip:
+      name: docker
+
+  - name: "Pull docker image {{ zigbee2mqtt_image }}"
+    docker_image:
+      name: "{{ zigbee2mqtt_image }}"
+
+  - name: Ensure zigbee2mqtt container is present
+    docker_container:
+      name: zigbee2mqtt
+      image: "{{ zigbee2mqtt_image }}"
+      state: present
+      restart_policy: always
+      links:
+        - mqtt
+      devices:
+        - /dev/ttyACM0
+      volumes:
+        - /var/lib/zigbee2mqtt/config:/app/data:rw
+    notify: restart zigbee2mqtt

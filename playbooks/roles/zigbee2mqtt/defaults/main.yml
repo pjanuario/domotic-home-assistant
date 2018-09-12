@@ -1,0 +1,6 @@
+---
+zigbee2mqtt_image: koenkk/zigbee2mqtt:0.1.3
+zigbee2mqtt_mqtt_server: mqtt://mqtt:1883
+zigbee2mqtt_mqtt_user:
+zigbee2mqtt_mqtt_password:
+zigbee2mqtt_mqtt_client_id: zigbee2mqtt
