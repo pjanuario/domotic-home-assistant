@@ -1,6 +1,6 @@
 #DARK_SKY
 - platform: darksky
-  api_key: 83c567c0b9716963557fc5541de601ba
+  api_key: !secret darksky_api_key
   language: pt
   monitored_conditions:
     - summary
