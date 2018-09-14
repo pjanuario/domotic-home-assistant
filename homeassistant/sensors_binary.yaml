@@ -1,0 +1,12 @@
+-
+  platform: "mqtt"
+  name: "0x00158d0001d52460"
+  state_topic: "zigbee2mqtt/0x00158d0001d52460"
+  availability_topic: "zigbee2mqtt/bridge/state"
+  payload_on: true
+  payload_off: false
+  value_template: "{{ value_json.occupancy }}"
+  device_class: "motion"
+  json_attributes:
+    - "battery"
+    - "voltage"

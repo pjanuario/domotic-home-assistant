@@ -176,6 +176,7 @@ homeassistant_config_files:
   - scripts.yaml
   - secrets.yaml
   - sensors.yaml
+  - sensors_binary.yaml
   - switchs.yaml
 
 zigbee2mqtt_mqtt_server: mqtt://mqtt:1883

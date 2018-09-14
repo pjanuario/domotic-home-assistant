@@ -83,24 +83,33 @@ cloud:
 #     source: homeassistant
 
 ## MQTT broker
-# TODO: Add authentication to the broker
 mqtt:
   broker: !secret mqtt_broker
   port: !secret mqtt_port
   client_id: !secret mqtt_client_id
   username: !secret mqtt_username
   password: !secret mqtt_password
+  discovery: true
+  discovery_prefix: homeassistant
 
 ## Use a POSTGRES recorder
 recorder:
   purge_keep_days: 365
   db_url: !secret recorder_db_url
 
+weather:
+  - platform: ipma
+    latitude: !secret latitude
+    longitude: !secret longitude
+  - platform: darksky
+    api_key: !secret darksky_api_key
+
 ###########INCLUDES#####
 sensor: !include sensors.yaml
-switch: !include switchs.yaml
-group: !include groups.yaml
-automation: !include automations.yaml
+binary_sensor: !include sensors_binary.yaml
+# switch: !include switchs.yaml
+# group: !include groups.yaml
+# automation: !include automations.yaml
 #input_number: !include input_number.yaml
 # input_select: !include input_select.yaml
 # input_boolean: !include input_booleans.yaml
