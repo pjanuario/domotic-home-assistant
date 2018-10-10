@@ -33,4 +33,4 @@
       name: Elasticsearch curator
       minute: "{{ curator_schedule_minute }}"
       hour: "{{ curator_schedule_hour }}"
-      job: "docker run --name curator --link elasticsearch -v  /var/lib/curator/config/ca.crt:/config/ca.crt:ro -v /var/lib/curator/config/actions.yml:/config/actions.yml:ro -v /var/lib/curator/config/curator.yml:/config/curator.yml:ro --rm {{ curator_image }} --config /config/curator.yml /config/actions.yml"
+      job: "docker run --user 1000 --name curator --link elasticsearch -v /var/lib/curator/config/ca.crt:/config/ca.crt:ro -v /var/lib/curator/config/actions.yml:/config/actions.yml:ro -v /var/lib/curator/config/curator.yml:/config/curator.yml:ro --rm {{ curator_image }} --config /config/curator.yml /config/actions.yml"
