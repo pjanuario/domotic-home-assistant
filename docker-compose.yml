@@ -34,7 +34,7 @@ services:
 
   mqtt:
     container_name: ha.mqtt
-    image: matteocollina/mosca
+    image: matteocollina/mosca:v2.8.3
     entrypoint: ["/usr/src/app/bin/mosca", "-d", "/db", "-v", "--credentials", "/config/.credentials.json"]
     volumes:
       - .data/mosca:/db:rw
@@ -45,7 +45,7 @@ services:
   ha:
     env_file: ['.env']
     container_name: ha
-    image: homeassistant/home-assistant:0.77.3
+    image: homeassistant/home-assistant:0.79.3
     links:
       - mqtt
       # - influxdb
@@ -58,6 +58,7 @@ services:
       - ./homeassistant/scripts.yaml:/config/scripts.yaml:rw
       - ./homeassistant/secrets.yaml:/config/secrets.yaml:rw
       - ./homeassistant/sensors.yaml:/config/sensors.yaml:rw
+      - ./homeassistant/sensors_binary.yaml:/config/sensors_binary.yaml:rw
       - ./homeassistant/switchs.yaml:/config/switchs.yaml:rw
       - ./.data/homeassitant:/config/.storage:rw
     ports:
