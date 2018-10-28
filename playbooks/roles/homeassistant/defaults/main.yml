@@ -1,3 +1,4 @@
+homeassistant_domain: domotic.peter-iot.com
 homeassistant_image: homeassistant/home-assistant:0.77.3
 homeassistant_admin_username:
 homeassistant_admin_password:

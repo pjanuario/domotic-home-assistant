@@ -72,6 +72,8 @@
     docker_container:
       name: homeassistant
       image: "{{ homeassistant_image }}"
+      labels:
+        traefik.frontend.rule: "Host:{{ homeassistant_domain }}"
       state: present
       links:
         - postgres:pg
