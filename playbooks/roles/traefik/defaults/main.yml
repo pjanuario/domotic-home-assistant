@@ -1,0 +1,2 @@
+---
+traefik_image: traefik:1.7.3-alpine
