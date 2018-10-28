@@ -31,10 +31,7 @@
       image: "{{ mqtt_image }}"
       state: present
       entrypoint: ["/usr/src/app/bin/mosca", "-d", "/db", "-v", "--credentials", "/config/.credentials.json"]
-      exposed:
-        - "1883:1883"
-      ports:
-        - "1883:1883"
+      exposed: [1883]
       restart_policy: always
       volumes:
         - /var/lib/mosca/data:/db:rw
