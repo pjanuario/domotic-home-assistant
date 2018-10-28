@@ -72,27 +72,31 @@
     docker_container:
       name: homeassistant
       image: "{{ homeassistant_image }}"
+      labels:
+        traefik.frontend.rule: "Host:{{ homeassistant_domain }}"
       state: present
       links:
         - postgres:pg
         - mqtt
-      exposed:
-        - "8123:8123"
-      ports:
-        - "8123:8123"
+      exposed: [8123]
       restart_policy: always
       volumes:
         - /var/lib/homeassistant/config:/config:rw
         - /var/lib/homeassistant/data:/config/.storage:rw
     notify: restart homeassistant
+    register: homeassistant_container
 
   # Flush the handler to ensure container are started or restarted in case it needs
   - name: Flushing handlers
     meta: flush_handlers
 
-  - name: Wait for homeassistant to be running
+  - name: Set Homeassistant container URL
+    set_fact:
+      homeassistant_container_url: "http://{{ homeassistant_container['ansible_facts']['docker_container']['NetworkSettings']['IPAddress'] }}:8123"
+
+  - name: "Wait for homeassistant to be running at {{ homeassistant_container_url }}"
     uri:
-      url: http://localhost:8123
+      url: "{{ homeassistant_container_url }}"
       status_code: 200
     register: result
     until: result.status == 200

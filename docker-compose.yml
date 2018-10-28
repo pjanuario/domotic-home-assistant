@@ -1,5 +1,18 @@
 version: '3.6'
 services:
+  traefik:
+    image: traefik:1.7.3-alpine
+    container_name: ha.traefik
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api --docker
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The Web UI (enabled by --api)
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   pg:
     env_file: ['.env']
     image: postgres:10.5-alpine
@@ -46,6 +59,8 @@ services:
     env_file: ['.env']
     container_name: ha
     image: homeassistant/home-assistant:0.79.3
+    labels:
+      - "traefik.frontend.rule=Host:ha.docker.localhost"
     links:
       - mqtt
       # - influxdb

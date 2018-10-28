@@ -4,3 +4,4 @@
     name: homeassistant
     state: started
     restart: yes
+  register: homeassistant_container

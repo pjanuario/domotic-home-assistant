@@ -75,12 +75,11 @@
     docker_container:
       name: kibana
       image: "{{ kibana_image }}"
+      labels:
+        traefik.frontend.rule: "Host:{{ kibana_domain }}"
       state: present
       links: elasticsearch
-      exposed:
-        - "5601:5601"
-      ports:
-        - "5601:5601"
+      exposed: [5601]
       restart_policy: always
       volumes:
         - /var/lib/kibana/config/kibana.keystore:/usr/share/kibana/data/kibana.keystore:ro
@@ -89,14 +88,19 @@
         - /var/lib/kibana/config/certs/kibana.key:/usr/share/kibana/config/certs/kibana.key:ro
         - /var/lib/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
     notify: restart kibana
+    register: kibana_container
 
   # Flush the handler to ensure container are started or restarted in case it needs
   - name: Flushing handlers
     meta: flush_handlers
 
-  - name: Wait for kibana to be running
+  - name: Set Kibana container URL
+    set_fact:
+      kibana_container_url: "http://{{ kibana_container['ansible_facts']['docker_container']['NetworkSettings']['IPAddress'] }}:5601"
+
+  - name: "Wait for kibana to be running at {{ kibana_container_url }}"
     uri:
-      url: http://localhost:5601
+      url: "{{ kibana_container_url }}"
       status_code: 200
     register: result
     until: result.status == 200

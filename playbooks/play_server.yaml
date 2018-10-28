@@ -17,3 +17,4 @@
     - { role: mqtt, tags: [ docker, mqtt ] }
     - { role: homeassistant, tags: [ docker, homeassistant ] }
     - { role: zigbee2mqtt, tags: [ docker, zigbee2mqtt ] }
+    - { role: traefik, tags: [ docker, traefik ] }

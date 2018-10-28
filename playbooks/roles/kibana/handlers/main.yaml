@@ -4,3 +4,4 @@
     name: kibana
     state: started
     restart: yes
+  register: kibana_container

@@ -1,0 +1,36 @@
+---
+  - name: Install pip3
+    apt: state=present pkg=python3-pip
+
+  - pip:
+      name: docker
+
+  - name: "Pull docker image {{ traefik_image }}"
+    docker_image:
+      name: "{{ traefik_image }}"
+
+  - name: Ensure traefik container is present
+    docker_container:
+      name: traefik
+      image: "{{ traefik_image }}"
+      state: present
+      command: --api --docker
+      exposed: [80, 8080]
+      ports: ["80:80", "8080:8080"]
+      restart_policy: always
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+    notify: restart traefik
+
+  # Flush the handler to ensure container are started or restarted in case it needs
+  - name: Flushing handlers
+    meta: flush_handlers
+
+  - name: Wait for treafik to be running
+    uri:
+      url: http://localhost:8080
+      status_code: 200
+    register: result
+    until: result.status == 200
+    retries: 60
+    delay: 5
