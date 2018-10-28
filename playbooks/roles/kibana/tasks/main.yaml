@@ -75,6 +75,8 @@
     docker_container:
       name: kibana
       image: "{{ kibana_image }}"
+      labels:
+        traefik.frontend.rule: "Host:{{ kibana_domain }}"
       state: present
       links: elasticsearch
       exposed: [5601]

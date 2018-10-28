@@ -1,4 +1,5 @@
 ---
+kibana_domain: kibana.peter-iot.com
 kibana_image: docker.elastic.co/kibana/kibana:6.4.0
 kibana_ca:
 kibana_keystore:
