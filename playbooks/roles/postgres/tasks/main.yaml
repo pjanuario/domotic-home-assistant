@@ -33,10 +33,7 @@
         POSTGRES_USER: "{{ postgres_user }}"
         POSTGRES_PASSWORD: "{{ postgres_password }}"
         POSTGRES_DB: "{{ postgres_db }}"
-      exposed:
-        - "5432:5432"
-      ports:
-        - "5432:5432"
+      exposed: [5432]
       restart_policy: always
       volumes:
         - /var/lib/postgresql/data:/var/lib/postgresql/data:rw
