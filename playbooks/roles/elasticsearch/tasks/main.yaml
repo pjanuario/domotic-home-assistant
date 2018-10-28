@@ -74,24 +74,27 @@
       name: elasticsearch
       image: "{{ elasticsearch_image }}"
       state: present
-      exposed:
-        - "9200:9200"
-      ports:
-        - "9200:9200"
+      exposed: [9200]
       restart_policy: always
       volumes:
         - /var/lib/elasticsearch/data:/usr/share/elasticsearch/data:rw
         - /var/lib/elasticsearch/config/certs:/usr/share/elasticsearch/config/certs:ro
         - /var/lib/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
         - /var/lib/elasticsearch/config/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore:ro
+    notify: restart elasticsearch
+    register: elasticsearch_container
 
   # Flush the handler to ensure container are started or restarted in case it needs
   - name: Flushing handlers
     meta: flush_handlers
 
-  - name: Wait for elasticsearch to be running
+  - name: Set Elasticsearch container URL
+    set_fact:
+      elasticsearch_container_url: "https://{{ elasticsearch_container['ansible_facts']['docker_container']['NetworkSettings']['IPAddress'] }}:9200"
+
+  - name: "Wait for Elasticsearch to be running at {{ elasticsearch_container_url }}"
     uri:
-      url: https://localhost:9200
+      url: "{{ elasticsearch_container_url }}"
       status_code: 200
       validate_certs: no
     register: result
