@@ -4,3 +4,4 @@
     name: elasticsearch
     state: started
     restart: yes
+  register: elasticsearch_container
