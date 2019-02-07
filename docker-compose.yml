@@ -58,7 +58,7 @@ services:
   ha:
     env_file: ['.env']
     container_name: ha
-    image: homeassistant/home-assistant:0.79.3
+    image: homeassistant/home-assistant:0.86.3
     labels:
       - "traefik.frontend.rule=Host:ha.docker.localhost"
     links:
