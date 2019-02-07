@@ -1,0 +1,90 @@
+title: Home
+
+views:
+  - title: Home
+    icon: mdi:home-assistant
+    path: home
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: picture-glance
+            title: Sala
+            entities:
+              - name: Movimentos
+                entity: binary_sensor.motion_living_room
+              - name: Porta
+                entity: binary_sensor.contact_living_room_1
+            image: https://freshome.com/wp-content/uploads/2018/01/living-room-intro.jpg
+            aspect_ratio: 16x9
+          - type: glance
+            entities:
+              - name: Temperatura
+                entity: sensor.living_room_temperature
+              - name: Humidade
+                entity: sensor.living_room_humidity
+          - type: sensor
+            entity: sensor.living_room_temperature
+            graph: line
+            name: Temperatura
+          - type: sensor
+            entity: sensor.living_room_humidity
+            graph: line
+            name: Humidade
+      - type: vertical-stack
+        cards:
+          - type: picture-glance
+            title: Quarto
+            entities: []
+            image: https://room-matehotels.com/images/img/general/slide_inicio/slide_01.jpg
+            aspect_ratio: 16x9
+          - type: glance
+            entities:
+              - name: Temperatura
+                entity: sensor.suite_temperature
+              - name: Humidade
+                entity: sensor.suite_humidity
+          - type: sensor
+            entity: sensor.suite_temperature
+            graph: line
+            name: Temperatura
+          - type: sensor
+            entity: sensor.suite_humidity
+            graph: line
+            name: Humidade
+      - type: weather-forecast
+        entity: weather.lisboa
+  - title: Config
+    icon: mdi:cogs
+    path: settings
+    cards:
+      - type: vertical-stack
+        cards:
+        - type: glance
+          entities:
+            - entity: sensor.speedtest_ping
+              name: Ping
+            - entity: sensor.speedtest_download
+              name: Download
+            - entity: sensor.speedtest_upload
+              name: Upload
+        - type: history-graph
+          entities:
+            - sensor.speedtest_download
+            - sensor.speedtest_ping
+            - sensor.speedtest_upload
+      - type: vertical-stack
+        cards:
+          - type: entities
+            entities:
+              - entity: sensor.living_room_battery
+                name: Sensor - Sala
+              - entity: sensor.suite_battery
+                name: Sensor - Suite
+              - entity: binary_sensor.motion_living_room_battery
+                name: Sensor Presença - Sala
+              - entity: binary_sensor.contact_living_room_1_battery
+                name: Sensor Porta - Sala
+            show_empty: false
+            card:
+              type: glance
+              title: Low batteries

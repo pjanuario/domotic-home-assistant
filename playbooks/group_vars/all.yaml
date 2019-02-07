@@ -171,13 +171,16 @@ homeassistant_config_path: ~/dev/domotic-home-assistant/homeassistant
 homeassistant_config_files:
   - automations.yaml
   - configuration.yaml
+  - covers.yaml
   - customize.yaml
   - groups.yaml
+  - lights.yaml
   - scripts.yaml
   - secrets.yaml
-  - sensors.yaml
   - sensors_binary.yaml
+  - sensors.yaml
   - switchs.yaml
+  - ui-lovelace.yaml
 
 zigbee2mqtt_mqtt_server: mqtt://mqtt:1883
 zigbee2mqtt_mqtt_client_id: zigbee2mqtt

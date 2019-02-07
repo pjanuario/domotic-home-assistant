@@ -69,12 +69,15 @@ services:
       - ./homeassistant/automations.yaml:/config/automations.yaml:rw
       - ./homeassistant/configuration.yaml:/config/configuration.yaml:rw
       - ./homeassistant/customize.yaml:/config/customize.yaml:rw
+      - ./homeassistant/covers.yaml:/config/covers.yaml:rw
       - ./homeassistant/groups.yaml:/config/groups.yaml:rw
       - ./homeassistant/scripts.yaml:/config/scripts.yaml:rw
       - ./homeassistant/secrets.yaml:/config/secrets.yaml:rw
       - ./homeassistant/sensors.yaml:/config/sensors.yaml:rw
       - ./homeassistant/sensors_binary.yaml:/config/sensors_binary.yaml:rw
       - ./homeassistant/switchs.yaml:/config/switchs.yaml:rw
+      - ./homeassistant/lights.yaml:/config/lights.yaml:rw
+      - ./homeassistant/ui-lovelace.yaml:/config/ui-lovelace.yaml:rw
       - ./.data/homeassitant:/config/.storage:rw
     ports:
       - 8123:8123

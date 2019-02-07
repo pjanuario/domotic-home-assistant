@@ -99,12 +99,13 @@ weather:
 ###########INCLUDES#####
 sensor: !include sensors.yaml
 binary_sensor: !include sensors_binary.yaml
-# switch: !include switchs.yaml
-# group: !include groups.yaml
-# automation: !include automations.yaml
-#input_number: !include input_number.yaml
+switch: !include switchs.yaml
+light: !include lights.yaml
+group: !include groups.yaml
+automation: !include automations.yaml
+# input_number: !include input_number.yaml
 # input_select: !include input_select.yaml
 # input_boolean: !include input_booleans.yaml
-#cover: !include cover.yaml
+cover: !include covers.yaml
 
 # device_tracker:  !include known_devices.yaml
