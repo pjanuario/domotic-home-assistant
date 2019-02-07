@@ -80,9 +80,9 @@ views:
                 name: Sensor - Sala
               - entity: sensor.suite_battery
                 name: Sensor - Suite
-              - entity: binary_sensor.motion_living_room_battery
+              - entity: sensor.motion_living_room_battery
                 name: Sensor Presença - Sala
-              - entity: binary_sensor.contact_living_room_1_battery
+              - entity: sensor.contact_living_room_1_battery
                 name: Sensor Porta - Sala
             show_empty: false
             card:
