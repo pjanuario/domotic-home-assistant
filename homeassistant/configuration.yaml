@@ -21,6 +21,9 @@ homeassistant:
 # Enables the frontend
 frontend:
 
+lovelace:
+  mode: yaml
+
 # Enables configuration UI
 config:
 
