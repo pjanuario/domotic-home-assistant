@@ -1,12 +1,31 @@
--
-  platform: "mqtt"
-  name: "0x00158d0001d52460"
+- platform: "mqtt"
+  name: "motion_living_room"
   state_topic: "zigbee2mqtt/0x00158d0001d52460"
   availability_topic: "zigbee2mqtt/bridge/state"
   payload_on: true
   payload_off: false
   value_template: "{{ value_json.occupancy }}"
   device_class: "motion"
-  json_attributes:
-    - "battery"
-    - "voltage"
+- platform: "mqtt"
+  name: "motion_living_room_battery"
+  state_topic: "zigbee2mqtt/0x00158d0001d52460"
+  availability_topic: "zigbee2mqtt/bridge/state"
+  unit_of_measurement: "%"
+  icon: "mdi:battery-charging-wireless-50"
+  value_template: "{{ value_json.battery }}"
+
+- platform: "mqtt"
+  name: "contact_living_room_1"
+  state_topic: "zigbee2mqtt/0x00158d00022efd55"
+  availability_topic: "zigbee2mqtt/bridge/state"
+  payload_on: true
+  payload_off: false
+  value_template: "{{ value_json.contact }}"
+  device_class: "door"
+- platform: "mqtt"
+  name: "contact_living_room_1_battery"
+  state_topic: "zigbee2mqtt/0x00158d00022efd55"
+  availability_topic: "zigbee2mqtt/bridge/state"
+  unit_of_measurement: "%"
+  icon: "mdi:battery-charging-wireless-50"
+  value_template: "{{ value_json.battery }}"

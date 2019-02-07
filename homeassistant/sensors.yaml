@@ -1,85 +1,49 @@
 - platform: "mqtt"
-  name: "0x00158d00020ecf1e_temperature"
+  name: "living_room_temperature"
+  state_topic: "zigbee2mqtt/0x00158d0002b55be4"
+  availability_topic: "zigbee2mqtt/bridge/state"
+  unit_of_measurement: "°C"
+  icon: "mdi:thermometer"
+  value_template: "{{ value_json.temperature }}"
+- platform: "mqtt"
+  name: "living_room_humidity"
+  state_topic: "zigbee2mqtt/0x00158d0002b55be4"
+  availability_topic: "zigbee2mqtt/bridge/state"
+  unit_of_measurement: "%"
+  icon: "mdi:water-percent"
+  value_template: "{{ value_json.humidity }}"
+- platform: "mqtt"
+  name: "living_room_battery"
+  state_topic: "zigbee2mqtt/0x00158d0002b55be4"
+  availability_topic: "zigbee2mqtt/bridge/state"
+  unit_of_measurement: "%"
+  icon: "mdi:battery-charging-wireless-50"
+  value_template: "{{ value_json.battery }}"
+
+- platform: "mqtt"
+  name: "suite_temperature"
   state_topic: "zigbee2mqtt/0x00158d00020ecf1e"
   availability_topic: "zigbee2mqtt/bridge/state"
   unit_of_measurement: "°C"
   icon: "mdi:thermometer"
   value_template: "{{ value_json.temperature }}"
-  json_attributes:
-    - "battery"
-    - "voltage"
-
 - platform: "mqtt"
-  name: "0x00158d00020ecf1e_humidity"
+  name: "suite_humidity"
   state_topic: "zigbee2mqtt/0x00158d00020ecf1e"
   availability_topic: "zigbee2mqtt/bridge/state"
   unit_of_measurement: "%"
   icon: "mdi:water-percent"
   value_template: "{{ value_json.humidity }}"
-  json_attributes:
-    - "battery"
-    - "voltage"
-
 - platform: "mqtt"
-  name: "Bateria"
+  name: "suite_battery"
   state_topic: "zigbee2mqtt/0x00158d00020ecf1e"
   availability_topic: "zigbee2mqtt/bridge/state"
   unit_of_measurement: "%"
   icon: "mdi:battery-charging-wireless-50"
   value_template: "{{ value_json.battery }}"
 
-#DARK_SKY
-# - platform: darksky
-#   api_key: !secret darksky_api_key
-#   language: pt
-#   monitored_conditions:
-#     - summary
-#     - precip_type
-#     - precip_probability
-#     - temperature
-#     - humidity
-#     - temperature_low
-#     - temperature_high
-
 - platform: speedtest
   monitored_conditions:
     - ping
     - download
     - upload
-
-# - platform: yr
-#   monitored_conditions:
-#   - temperature
-#   - symbol
-#   - precipitation
-#
-#
-# - platform: time_date
-#   display_options:
-#   - 'time'
-#   - 'date'
-#
-# - platform: template
-#   sensors:
-#     estadodotempo:
-#       friendly_name: 'Ceu'
-#       value_template: >
-#         {%- if is_state('sensor.dark_sky_summary', 'Partly Cloudy') -%}
-#           Parcialmente Nublado
-#         {%- elif is_state('sensor.dark_sky_summary', 'Clear') -%}
-#           Limpo
-#         {%- elif is_state('sensor.dark_sky_summary', 'rain') -%}
-#           Chuvoso
-#         {%- elif is_state('sensor.dark_sky_summary', 'Mostly Cloudy') -%}
-#           Muito Nublado
-#         {%- endif -%}
-#     sunrise:
-#       friendly_name: 'Amanhecer'
-#       value_template: '{{ as_timestamp(states.sun.sun.attributes.next_rising)|timestamp_custom("%H:%M:%S") }}'
-#       entity_id:
-#         - sun.sun
-#     sunset:
-#       friendly_name: 'Por do Sol'
-#       value_template: '{{ as_timestamp(states.sun.sun.attributes.next_setting)|timestamp_custom("%H:%M:%S") }}'
-#       entity_id:
-#         - sun.sun
