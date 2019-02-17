@@ -1,0 +1,3 @@
+- platform: ffmpeg
+  input: !secret camera_escam
+  name: living_room

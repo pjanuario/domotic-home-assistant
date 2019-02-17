@@ -14,7 +14,7 @@ views:
                 entity: binary_sensor.motion_living_room
               - name: Porta
                 entity: binary_sensor.contact_living_room_1
-            image: https://freshome.com/wp-content/uploads/2018/01/living-room-intro.jpg
+            camera_image: camera.living_room
             aspect_ratio: 16x9
           - type: glance
             entities:

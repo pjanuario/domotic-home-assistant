@@ -67,6 +67,7 @@ services:
       - pg
     volumes:
       - ./homeassistant/automations.yaml:/config/automations.yaml:rw
+      - ./homeassistant/cameras.yaml:/config/cameras.yaml:rw
       - ./homeassistant/configuration.yaml:/config/configuration.yaml:rw
       - ./homeassistant/customize.yaml:/config/customize.yaml:rw
       - ./homeassistant/covers.yaml:/config/covers.yaml:rw

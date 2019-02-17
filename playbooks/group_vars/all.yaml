@@ -170,6 +170,7 @@ homeassistant_salt: !vault |
 homeassistant_config_path: ~/dev/domotic-home-assistant/homeassistant
 homeassistant_config_files:
   - automations.yaml
+  - cameras.yaml
   - configuration.yaml
   - covers.yaml
   - customize.yaml
