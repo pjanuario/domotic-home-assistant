@@ -11,7 +11,7 @@
   name: "contact_living_room_1"
   state_topic: "zigbee2mqtt/0x00158d00022efd55"
   availability_topic: "zigbee2mqtt/bridge/state"
-  payload_on: true
-  payload_off: false
+  payload_on: false
+  payload_off: true
   value_template: "{{ value_json.contact }}"
   device_class: "door"
