@@ -1,0 +1,54 @@
+- hosts: all
+  become: true
+
+  handlers:
+    - name: restart homeassistant
+      docker_container:
+        name: homeassistant
+        state: started
+        restart: yes
+      register: homeassistant_container
+
+  tasks:
+    - name: Ensure homeassistant container is present
+      docker_container:
+        name: homeassistant
+        image: "{{ homeassistant_image }}"
+        state: present
+      register: homeassistant_container
+
+    # Lovelace doesnt require a restart
+    - name: Copy homeassistant lovelace configuration
+      copy:
+        src: "{{ homeassistant_config_path }}/ui-lovelace.yaml"
+        dest: "/var/lib/homeassistant/config/ui-lovelace.yaml"
+        owner: "1000"
+        group: "1000"
+        mode: "g+rwx"
+
+    - name: Copy homeassistant configuration folder
+      copy:
+        src: "{{ homeassistant_config_path }}/{{ item }}"
+        dest: "/var/lib/homeassistant/config/{{item}}"
+        owner: "1000"
+        group: "1000"
+        mode: "g+rwx"
+      with_items: "{{ homeassistant_config_files }}"
+      notify: restart homeassistant
+
+    # Flush the handler to ensure container are started or restarted in case it needs
+    - name: Flushing handlers
+      meta: flush_handlers
+
+    - name: Set Homeassistant container URL
+      set_fact:
+        homeassistant_container_url: "http://{{ homeassistant_container['ansible_facts']['docker_container']['NetworkSettings']['IPAddress'] }}:8123"
+
+    - name: "Wait for homeassistant to be running at {{ homeassistant_container_url }}"
+      uri:
+        url: "{{ homeassistant_container_url }}"
+        status_code: 200
+      register: result
+      until: result.status == 200
+      retries: 60
+      delay: 5
