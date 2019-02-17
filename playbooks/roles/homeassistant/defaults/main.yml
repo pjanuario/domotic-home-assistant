@@ -1,5 +1,5 @@
-homeassistant_domain: domotic.peter-iot.com
-homeassistant_image: homeassistant/home-assistant:0.77.3
+homeassistant_domain: domotic.iot.com
+homeassistant_image: homeassistant/home-assistant:0.87.0
 homeassistant_admin_username:
 homeassistant_admin_password:
 homeassistant_salt:
