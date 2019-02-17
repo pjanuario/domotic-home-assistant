@@ -22,7 +22,7 @@ serial:
   # Required: location of CC2531 USB sniffer
   port: /dev/ttyACM0
   # Optional: disable LED of CC2531 USB sniffer
-  disable_led: false
+  disable_led: true
 
 # Optional: advanced settings
 advanced:
@@ -41,3 +41,8 @@ advanced:
   baudrate: 115200
   # Optional: RTS / CTS Hardware Flow Control for serial port
   rtscts: true
+
+device_options:
+  temperature_precision: 1
+  humidity_precision: 0
+  retain: true
