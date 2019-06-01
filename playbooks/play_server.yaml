@@ -14,7 +14,7 @@
     - { role: kibana, tags: [ docker, kibana ] }
     - { role: filebeat, tags: [ docker, filebeat ] }
     - { role: postgres, tags: [ docker, postgres ] }
+    - { role: traefik, tags: [ docker, traefik ] }
     - { role: mqtt, tags: [ docker, mqtt ] }
     - { role: homeassistant, tags: [ docker, homeassistant ] }
     - { role: zigbee2mqtt, tags: [ docker, zigbee2mqtt ] }
-    - { role: traefik, tags: [ docker, traefik ] }
