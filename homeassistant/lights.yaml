@@ -1,0 +1,11 @@
+- platform: mqtt
+  name: 'shelly1'
+  state_topic: 'shellies/shelly1-2C89BD/relay/0'
+  command_topic: 'shellies/shelly1-2C89BD/relay/0/command'
+  availability_topic: 'shellies/shelly1-2C89BD/online'
+  payload_on: 'on'
+  payload_off: 'off'
+  payload_available: 'true'
+  payload_not_available: 'false'
+  qos: 0
+  retain: false

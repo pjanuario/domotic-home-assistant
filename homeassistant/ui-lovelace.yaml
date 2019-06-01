@@ -22,6 +22,10 @@ views:
                 entity: sensor.living_room_temperature
               - name: Humidade
                 entity: sensor.living_room_humidity
+              - name: Light
+                entity: light.shelly1
+                tap_action:
+                  action: toggle
           - type: sensor
             entity: sensor.living_room_temperature
             graph: line
