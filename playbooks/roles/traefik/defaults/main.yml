@@ -1,2 +1,4 @@
 ---
 traefik_image: traefik:1.7.3-alpine
+traefik_acme_email: youremail@example.com
+traefik_acme_domain: yourdomain.example.com

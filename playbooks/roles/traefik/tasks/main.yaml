@@ -1,4 +1,44 @@
 ---
+  - name: Make sure /var/lib/traefik directory exists
+    file:
+      path: /var/lib/traefik
+      state: directory
+
+  - name: Make sure /var/lib/traefik/config directory exists
+    file:
+      path: /var/lib/traefik/config
+      state: directory
+      owner: "1000"
+      group: "1000"
+      mode: "g+rwx"
+
+  - name: Make sure /var/lib/traefik/data directory exists
+    file:
+      path: /var/lib/traefik/data
+      state: directory
+      owner: "1000"
+      group: "1000"
+      mode: "600"
+    register: traefik_data_dir_create
+
+  # # TODO: replace with touch
+  - name: Copy traefik acme storage
+    copy:
+      src: acme.json
+      dest: /var/lib/traefik/data/acme.json
+      owner: "1000"
+      group: "1000"
+      mode: "g+rwx"
+    when: traefik_data_dir_create.changed
+
+  - name: Copy traefik configuration
+    template:
+      src: traefik.toml.j2
+      dest: /var/lib/traefik/config/traefik.toml
+      owner: "1000"
+      group: "1000"
+      mode: "g+rwx"
+
   - name: Install pip3
     apt: state=present pkg=python3-pip
 
@@ -9,17 +49,26 @@
     docker_image:
       name: "{{ traefik_image }}"
 
+  - name: Create a external docker network
+    docker_network:
+      name: traefik_external
+
   - name: Ensure traefik container is present
     docker_container:
       name: traefik
       image: "{{ traefik_image }}"
       state: present
       command: --api --docker
-      exposed: [80, 8080]
-      ports: ["80:80", "8080:8080"]
+      exposed: [80, 443, 8080]
+      ports: ["80:80", "443:443", "8080:8080"]
       restart_policy: always
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock:ro
+        - /var/lib/traefik/config/traefik.toml:/traefik.toml:ro
+        - /var/lib/traefik/data:/etc/traefik/acme
+      networks:
+        - name: traefik_external
+      purge_networks: yes
     notify: restart traefik
 
   # Flush the handler to ensure container are started or restarted in case it needs

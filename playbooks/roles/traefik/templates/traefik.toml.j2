@@ -1,0 +1,49 @@
+# Enable debug mode.
+# This will install HTTP handlers to expose Go expvars under /debug/vars and
+# pprof profiling data under /debug/pprof/.
+# The log level will be set to DEBUG unless `logLevel` is specified.
+#
+# Optional
+# Default: false
+#
+debug = true
+#logLevel = "INFO"
+
+# Entrypoints to be used by frontends that do not specify any entrypoint.
+# Each frontend can specify its own entrypoints.
+#
+# Optional
+# Default: ["http"]
+#
+defaultEntryPoints = ["https","http"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+
+[retry]
+
+# [web]
+# address = ":8080"
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "docker.localhost"
+watch = true
+exposedbydefault = false
+
+[acme]
+email = "{{ traefik_acme_email }}"
+storage = "etc/traefik/acme/acme.json"
+entryPoint = "https"
+OnHostRule = true
+[acme.httpChallenge]
+  entryPoint = "http"
+
+[[acme.domains]]
+  main = "{{ traefik_acme_domain }}"
