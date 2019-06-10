@@ -20,14 +20,19 @@
     docker_image:
       name: "{{ zigbee2mqtt_image }}"
 
+  - name: Create the internal docker network
+    docker_network:
+      name: management_net
+
   - name: Ensure zigbee2mqtt container is present
     docker_container:
       name: zigbee2mqtt
       image: "{{ zigbee2mqtt_image }}"
       state: present
       restart_policy: always
-      links:
-        - mqtt
+      networks:
+        - name: management_net
+      purge_networks: yes
       devices:
         - /dev/ttyACM0
       volumes:

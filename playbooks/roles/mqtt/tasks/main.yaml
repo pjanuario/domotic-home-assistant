@@ -25,6 +25,10 @@
     docker_image:
       name: "{{ mqtt_image }}"
 
+  - name: Create the internal docker network
+    docker_network:
+      name: management_net
+
   - name: Ensure mqtt container is present
     docker_container:
       name: mqtt
@@ -32,6 +36,10 @@
       state: present
       entrypoint: ["/usr/src/app/bin/mosca", "-d", "/db", "-v", "--credentials", "/config/.credentials.json"]
       exposed: [1883]
+      ports: ["1883:1883"]
+      networks:
+        - name: management_net
+      purge_networks: yes
       restart_policy: always
       volumes:
         - /var/lib/mosca/data:/db:rw

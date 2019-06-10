@@ -25,6 +25,10 @@
     docker_image:
       name: "{{ postgres_image }}"
 
+  - name: Create the internal docker network
+    docker_network:
+      name: management_net
+
   - name: Ensure postgres container is running
     docker_container:
       name: postgres
@@ -34,6 +38,9 @@
         POSTGRES_PASSWORD: "{{ postgres_password }}"
         POSTGRES_DB: "{{ postgres_db }}"
       exposed: [5432]
+      networks:
+        - name: management_net
+      purge_networks: yes
       restart_policy: always
       volumes:
         - /var/lib/postgresql/data:/var/lib/postgresql/data:rw

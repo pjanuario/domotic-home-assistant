@@ -68,6 +68,14 @@
     docker_image:
       name: "{{ homeassistant_image }}"
 
+  - name: Create the internal docker network
+    docker_network:
+    name: management_net
+
+  - name: Create a external docker network
+    docker_network:
+      name: traefik_external
+
   - name: Ensure homeassistant container is present
     docker_container:
       name: homeassistant
@@ -79,11 +87,9 @@
         traefik.port: "8123"
         traefik.default.protocol: "http"
       state: present
-      links:
-        - postgres:pg
-        - mqtt
       networks:
         - name: traefik_external
+        - name: management_net
       purge_networks: yes
       exposed: [8123]
       restart_policy: always
@@ -93,6 +99,10 @@
     notify: restart homeassistant
     register: homeassistant_container
 
+  - name: Ensure homeassistant container is started
+    docker_container:
+      name: homeassistant
+      state: started
   # Flush the handler to ensure container are started or restarted in case it needs
   - name: Flushing handlers
     meta: flush_handlers
