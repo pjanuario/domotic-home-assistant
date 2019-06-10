@@ -73,11 +73,18 @@
       name: homeassistant
       image: "{{ homeassistant_image }}"
       labels:
+        traefik.docker.network: "traefik_external"
         traefik.frontend.rule: "Host:{{ homeassistant_domain }}"
+        traefik.enable: "true"
+        traefik.port: "8123"
+        traefik.default.protocol: "http"
       state: present
       links:
         - postgres:pg
         - mqtt
+      networks:
+        - name: traefik_external
+      purge_networks: yes
       exposed: [8123]
       restart_policy: always
       volumes:
