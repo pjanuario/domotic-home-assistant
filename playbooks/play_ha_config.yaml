@@ -42,7 +42,7 @@
 
     - name: Set Homeassistant container URL
       set_fact:
-        homeassistant_container_url: "http://{{ homeassistant_container['ansible_facts']['docker_container']['NetworkSettings']['IPAddress'] }}:8123"
+        homeassistant_container_url: "http://{{ homeassistant_container['ansible_facts']['docker_container']['NetworkSettings']['Networks']['management_net']['IPAddress'] }}:8123"
 
     - name: "Wait for homeassistant to be running at {{ homeassistant_container_url }}"
       uri:
