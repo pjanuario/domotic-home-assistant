@@ -26,6 +26,12 @@ views:
                 entity: light.shelly1
                 tap_action:
                   action: toggle
+          - type: entities
+            show_header_toggle: false
+            entities:
+              - entity: cover.shelly25
+                icon: mdi:blinds
+              - entity: sensor.shelly25
           - type: sensor
             entity: sensor.living_room_temperature
             graph: line

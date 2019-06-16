@@ -64,3 +64,8 @@
     - ping
     - download
     - upload
+
+- platform: mqtt
+  name: shelly25
+  state_topic : "shellies/shellyswitch25-5DBF69/relay/power"
+  unit_of_measurement: "W"
