@@ -112,10 +112,5 @@ switch: !include switchs.yaml
 light: !include lights.yaml
 group: !include groups.yaml
 automation: !include automations.yaml
-# input_number: !include input_number.yaml
-# input_select: !include input_select.yaml
-# input_boolean: !include input_booleans.yaml
 cover: !include covers.yaml
 camera: !include cameras.yaml
-
-# device_tracker:  !include known_devices.yaml
