@@ -63,6 +63,16 @@ views:
             name: Humidade
       - type: weather-forecast
         entity: weather.lisboa
+
+  - title: Media Center
+    icon: mdi:theater
+    path: media
+    cards:
+      - type: entities
+        show_header_toggle: false
+        entities:
+          - entity: switch.tv
+
   - title: Config
     icon: mdi:cogs
     path: settings
