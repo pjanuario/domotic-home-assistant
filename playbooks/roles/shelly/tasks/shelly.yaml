@@ -1,0 +1,110 @@
+---
+- name: Display shelly play config
+  debug: var=shelly
+
+- name: "Shelly URI http://{{ shelly.ip }}/settings"
+  set_fact: shelly_uri="http://{{ shelly.ip }}/settings"
+
+# check if it's available on ip network or shelly ap ip
+- name: Get device settings
+  uri:
+    url: "{{ shelly_uri }}"
+    method: GET
+    status_code: [200,-1]
+    timeout: 5
+  register: settings
+  when: shelly.ip is defined
+
+- name: "Shelly URI http://{{ shelly_ap_ip }}/settings"
+  set_fact: shelly_uri="http://{{ shelly_ap_ip }}/settings"
+  when: settings.status != 200
+
+- name: Get device settings from default ap ip
+  uri:
+    url: "{{ shelly_uri }}"
+    method: GET
+  register: settings_default
+  when: settings.status != 200
+
+- name: "Set settings from default"
+  set_fact: settings="{{ settings_default }}"
+  when: settings.status != 200
+
+- name: Display settings info
+  debug: var=settings.json
+
+- name: Enable WiFi STA connection
+  uri:
+    url: "{{ shelly_uri }}/sta?enabled=1&ssid={{ wifi_ssid }}&key={{ wifi_password }}&ipv4_method=dhcp"
+    method: GET
+    status_code: 200
+  when: not settings.json.wifi_sta.enabled
+
+- name: Get Shelly new IP
+  pause:
+    prompt: "Enter the device IP"
+  register: shelly_dev_ip
+  when: shelly.ip == ""
+
+- name: Display settings info
+  debug: var=shelly_dev_ip.user_input
+  when: shelly.ip == ""
+
+- name: "Shelly URI http://{{ shelly_dev_ip.user_input }}/settings"
+  set_fact: shelly_uri="http://{{ shelly_dev_ip.user_input }}/settings"
+  when: shelly.ip == ""
+
+# TODO: Need to set shelly ip when ip not empty but device had factory reset
+
+# wait after change the wifi in this case we also change our wifi to valid wifi
+- name: "Wait for shelly to join WiFi"
+  uri:
+    url: "{{ shelly_uri }}"
+    method: GET
+    status: 200
+  register: settings
+  until: settings.status == 200
+  retries: 30
+  delay: 5
+
+- name: Disable cloud connection
+  uri:
+    url: "{{ shelly_uri }}/cloud?enabled=0"
+    method: GET
+    status_code: 200
+  when: settings.json.cloud.enabled
+
+- name: Enable MQTT configuration
+  uri:
+    url: "{{ shelly_uri }}?mqtt_enable=1&mqtt_server={{ shelly_mqtt_server }}&mqtt_user={{ shelly_mqtt_user }}&mqtt_pass={{ shelly_mqtt_pass }}"
+    method: GET
+    status_code: 200
+  when: not settings.json.mqtt.enable
+
+- name: Get relays information
+  uri:
+    url: "{{ shelly_uri }}/relay/{{ index }}"
+    method: GET
+    status_code: 200
+  register: relays_settings
+  loop: "{{ shelly.relays }}"
+  loop_control:
+    index_var: index
+
+# TODO: improve to show only json data
+- name: Display info
+  debug: var=relays_settings.results
+
+- name: Set relays information
+  uri:
+    url: "{{ shelly_uri }}/relay/{{ index }}?btn_type={{ item.btn_type }}&default_state={{ item.default_state }}"
+    method: GET
+    status_code: 200
+  register: relays_settings
+  loop: "{{ shelly.relays }}"
+  loop_control:
+    index_var: index
+
+# TODO: improve to show only json data
+- name: Display info
+  debug: var=relays_settings.results
